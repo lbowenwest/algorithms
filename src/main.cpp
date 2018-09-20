@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <random>
+#include <algorithm>
 #include <SFML/Graphics.hpp>
 #include <boost/program_options.hpp>
 
@@ -26,6 +28,7 @@ void option_dependency(const po::variables_map& vm, const char* base, const char
 int main(int argc, char **argv) {
   try {
     string file_path;
+    int iterations, size;
 
     po::options_description desc("Allowed options");
     po::variables_map vm;
@@ -34,7 +37,10 @@ int main(int argc, char **argv) {
       ("help,h", "produce this message")
       ("file,f", po::value<string>(&file_path), "file path to read in")
       ("visualiser,v", "show visualiser")
-      ("bootstrap,b", "estimate a value for the percolation probability");
+      ("bootstrap,b", "estimate a value for the percolation probability")
+      ("size,s", po::value<int>(&size)->default_value(10), "size of grid to use in generation")
+      ("iterations,i", po::value<int>(&iterations)->default_value(1), "number of times to iterate in bootstrap");
+
 
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
@@ -43,8 +49,7 @@ int main(int argc, char **argv) {
     conflicting_options(vm, "bootstrap", "file");
     option_dependency(vm, "visualiser", "file");
 
-
-    if (vm.empty()) {
+    if (!vm.count("file") && !vm.count("bootstrap")) {
       std::cout << desc << std::endl;
       return 1;
     }
@@ -75,12 +80,34 @@ int main(int argc, char **argv) {
       return 0;
     }
 
+
     if (vm.count("bootstrap")) {
-      std::cout << "I'm gonna do some bootstrapping now" << std::endl;
+      std::random_device rd;
+      std::mt19937 g(rd());
+      
+      double est = 0.0;
+      for (int i = 1; i <= iterations; ++i) {
 
-      /* std::cout << vm << std::endl; */
+        percolation pc(size);
+        auto points = pc.points();
+
+        std::shuffle(points.begin(), points.end(), g);
+
+        int num_open = 0;
+        for (auto i : points) {
+          if (pc.check()) break;
+          pc.open(i);
+          ++num_open;
+        }
+        
+        est += num_open / static_cast<double>(size * size);
+      }
+      est /= static_cast<double>(iterations);
+      
+      std::cout << "N = " << size << "\tIterations = " << iterations << std::endl;
+      std::cout << "P = " << est << std::endl;
+
     }
-
 
 
   } 

@@ -35,6 +35,10 @@ void percolation::open(size_t r, size_t c) {
   connect_adjacents(r, c);
 }
 
+void percolation::open(coord c) {
+  open(c.first, c.second);
+}
+
 bool percolation::is_open(coord c) {
   return is_open(c.first, c.second);   
 }

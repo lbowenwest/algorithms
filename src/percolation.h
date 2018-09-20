@@ -35,14 +35,16 @@ class percolation {
     ~percolation() {delete [] id; };
 
     void open(size_t r, size_t c);
+    void open(coord c);
     bool is_open(size_t r, size_t c);
     bool is_open(coord c);
     bool check();
 
     std::vector<coord> points();
     int size() {return sz;};
-
+    int open_count() {return 1; };
     void print();
 };
 
 percolation generate_from_file(std::fstream& f);
+
