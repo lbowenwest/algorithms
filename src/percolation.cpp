@@ -85,3 +85,20 @@ void percolation::print() {
     cout << '\n';
   }
 }
+
+
+percolation generate_from_file(std::fstream& f) {
+  int size, a, b;
+  vector<pair<int,int>> sites;
+
+  if (f.is_open()) {
+    f >> size;
+    while (f >> a >> b)
+      sites.push_back({--a, --b});
+  }
+  percolation pc(size);
+  for (auto& c : sites)
+    pc.open(c.first, c.second);
+
+  return pc;
+}

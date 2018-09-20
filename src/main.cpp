@@ -51,20 +51,8 @@ int main(int argc, char **argv) {
 
 
     if (vm.count("file")) {
-      std::ifstream file(file_path);
-      int size, a, b;
-      vector<std::pair<int, int>> sites;
-
-      if (file.is_open()) {
-        file >> size;
-        while (file >> a >> b)
-          sites.push_back({--a, --b}); // files are index based 1 annoyingly
-      }
-
-      percolation pc(size);
-
-      for (auto& c : sites)
-        pc.open(c.first, c.second);
+      std::fstream file(file_path);
+      percolation pc = generate_from_file(file);
 
       if (vm.count("visualiser")) {
         sf::RenderWindow window(sf::VideoMode(1000, 1000), "sfml");

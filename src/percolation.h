@@ -3,6 +3,7 @@
 #include <vector>
 #include <utility>
 #include <iostream>
+#include <fstream>
 
 #include "union_find.h"
 
@@ -42,3 +43,5 @@ class percolation {
 
     void print();
 };
+
+percolation generate_from_file(std::fstream& f);
