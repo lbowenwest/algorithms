@@ -8,6 +8,7 @@ LDLIBS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system
 
 SRC_DIR=src
 BUILD_DIR=build
+BIN_DIR=bin
 
 SOURCES=$(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS=$(SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
@@ -16,9 +17,9 @@ DEPS=$(OBJECTS:.o=.d)
 EXECUTABLE=percol
 
 
-all: dirs $(EXECUTABLE) 
+all: dirs $(BIN_DIR)/$(EXECUTABLE) 
 
-$(EXECUTABLE): $(OBJECTS)
+$(BIN_DIR)/$(EXECUTABLE): $(OBJECTS)
 	@$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
@@ -27,9 +28,9 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 
 .PHONY: dirs
 dirs:
-	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR) $(BIN_DIR)
 
 .PHONY: clean
 clean:
-	@rm -r $(BUILD_DIR) $(EXECUTABLE)
+	@rm -r $(BUILD_DIR) $(BIN_DIR)
 
