@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 class UnionFind {
   protected:
     int* elem;
@@ -9,7 +11,7 @@ class UnionFind {
     UnionFind(int n) : elem(new int[n]), sz(n) {for (int i = 0; i < n; ++i) elem[i] = i; }; 
     ~UnionFind() {delete [] elem;}; 
     
-    void check_inputs(int a, int b) {if (a > size() || b > size()) throw "out of error"; };
+    void check_inputs(int a, int b); 
     int size() {return sz; };
 };
 

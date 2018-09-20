@@ -1,5 +1,9 @@
 #include "union_find.h"
 
+void UnionFind::check_inputs(int a, int b) {
+  if (a > size() || b > size()) throw std::invalid_argument("index not in range"); 
+}
+
 bool UnionFindQF::find(int a, int b) {
   check_inputs(a, b);
   return elem[a] == elem[b];
