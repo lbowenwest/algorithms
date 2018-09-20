@@ -1,55 +1,73 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
 #include <string>
 #include <fstream>
+#include <SFML/Graphics.hpp>
+#include <boost/program_options.hpp>
 
 #include "percolation.h"
 #include "visualiser.h"
 
-using namespace std;
+using std::string;
+using std::vector;
+namespace po = boost::program_options;
+
 
 int main(int argc, char **argv) {
   string file_path;
 
-  if (argc > 1) {
-    file_path = argv[1] ;
-  } else {
-    file_path = "input4.txt";
+  po::options_description desc("Allowed options");
+  desc.add_options()
+    ("help,h", "produce this message")
+    ("file,f", po::value<string>(&file_path), "file path to read in")
+    ("visualiser,v", "show visualiser");
+
+  po::variables_map vm;
+  po::store(po::parse_command_line(argc, argv, desc), vm);
+  po::notify(vm);
+
+
+  if (vm.count("help")) {
+    std::cout << desc << std::endl;
+    return 0;
   }
 
-  int size, a, b;
-  vector<pair<int, int>> sites;
-  ifstream file(file_path);
 
-  if (file.is_open()) {
-    file >> size;
-    while (file >> a >> b) {
-      sites.push_back({--a, --b}); // files are index based 1 annoyingly
+  if (vm.count("file")) {
+    std::ifstream file(file_path);
+    int size, a, b;
+    vector<std::pair<int, int>> sites;
+
+    if (file.is_open()) {
+      file >> size;
+      while (file >> a >> b)
+        sites.push_back({--a, --b}); // files are index based 1 annoyingly
     }
+
+    percolation pc(size);
+
+    for (auto& c : sites)
+      pc.open(c.first, c.second);
+
+    if (vm.count("visualiser")) {
+      sf::RenderWindow window(sf::VideoMode(1000, 1000), "sfml");
+      visualiser v(window, pc);
+      v.show();
+
+      return 0;
+    }
+
+    // no visualiser so just print if we percolate
+    if (pc.check()) std::cout << "Percolates!" << std::endl;
+    else  std::cout << "Does not percolate" << std::endl;
+
+    return 0;
+
   }
 
-  percolation pc(size);
-  for (auto& c : sites) {
-    pc.open(c.first, c.second);
-  }
+  // we didn't get any options, print help and exit out
+  std::cout << desc << std::endl;
+  return 1;
 
-  sf::RenderWindow window(sf::VideoMode(1000, 1000), "sfml");
-
-  visualiser v(window, pc);
-  v.show();
-
-  /* while (window.isOpen()) { */
-  /*     sf::Event event; */
-  /*     while (window.pollEvent(event)) { */
-  /*         if (event.type == sf::Event::Closed) */
-  /*             window.close(); */
-  /*     } */
-
-  /*     v.update(); */
-  /*     window.display(); */
-  /* } */
-
-  return 0;
 }
 
 

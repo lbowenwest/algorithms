@@ -3,7 +3,7 @@ CC=g++
 CPPFLAGS += -std=c++11
 CFLAGS = -g -Wall 
 LDFLAGS =
-LDLIBS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system 
+LDLIBS = -lsfml-graphics -lsfml-window -lsfml-system -lboost_program_options
 
 
 SRC_DIR=src
