@@ -43,6 +43,12 @@ int main(int argc, char **argv) {
     conflicting_options(vm, "bootstrap", "file");
     option_dependency(vm, "visualiser", "file");
 
+
+    if (vm.empty()) {
+      std::cout << desc << std::endl;
+      return 1;
+    }
+
     // if we have the help option we don't care about anything else
     if (vm.count("help")) {
       std::cout << desc << std::endl;
@@ -67,12 +73,15 @@ int main(int argc, char **argv) {
       else  std::cout << "Does not percolate" << std::endl;
 
       return 0;
-
     }
 
-    // we didn't get any options, print help and exit out
-    std::cout << desc << std::endl;
-    return 1;
+    if (vm.count("bootstrap")) {
+      std::cout << "I'm gonna do some bootstrapping now" << std::endl;
+
+      /* std::cout << vm << std::endl; */
+    }
+
+
 
   } 
 
