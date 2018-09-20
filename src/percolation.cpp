@@ -1,6 +1,10 @@
-
 #include "union_find.h"
 #include "percolation.h"
+
+using std::size_t;
+using std::vector;
+using std::pair;
+using std::cout;
 
 
 percolation::percolation(unsigned n) : sz(n), len(n*n+2), id(new bool[n*n]()), uf(UnionFindQUW((n*n)+2)) {
@@ -60,7 +64,7 @@ vector<coord> percolation::column(unsigned c) {
 
 vector<coord> percolation::points() {
   vector<coord> res;
-  for (int i = 0; i < sz; ++i) {
+  for (size_t i = 0; i < sz; ++i) {
     auto r = row(i);
     res.insert(res.end(), std::make_move_iterator(r.begin()), std::make_move_iterator(r.end()));
   }

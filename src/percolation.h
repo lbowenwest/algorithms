@@ -6,15 +6,10 @@
 
 #include "union_find.h"
 
-using std::vector;
-using std::pair;
-using std::cout;
-
-using coord = pair<unsigned,unsigned>;
+using coord = std::pair<std::size_t,std::size_t>;
 
 class percolation {
   private:
-
     unsigned sz;
     unsigned len;
     bool* id;
@@ -28,10 +23,10 @@ class percolation {
     inline bool valid(coord c) {return c.first < sz && c.second < sz; };
 
     void connect_adjacents(unsigned r, unsigned c);
-    vector<coord> neighbours(unsigned r, unsigned c);
+    std::vector<coord> neighbours(unsigned r, unsigned c);
 
-    vector<coord> row(unsigned r);
-    vector<coord> column(unsigned c);
+    std::vector<coord> row(unsigned r);
+    std::vector<coord> column(unsigned c);
 
   public:
     percolation(unsigned n);    
@@ -42,7 +37,7 @@ class percolation {
     bool is_open(coord c);
     bool check();
 
-    vector<coord> points();
+    std::vector<coord> points();
     int size() {return sz;};
 
     void print();
