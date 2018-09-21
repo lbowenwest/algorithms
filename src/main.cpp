@@ -3,6 +3,7 @@
 #include <fstream>
 #include <random>
 #include <algorithm>
+#include <future>
 #include <SFML/Graphics.hpp>
 #include <boost/program_options.hpp>
 
@@ -84,26 +85,28 @@ int main(int argc, char **argv) {
     if (vm.count("bootstrap")) {
       std::random_device rd;
       std::mt19937 g(rd());
-      
-      double est = 0.0;
-      for (int i = 1; i <= iterations; ++i) {
 
+      auto comp = [size,&g]() {
         percolation pc(size);
         auto points = pc.points();
-
         std::shuffle(points.begin(), points.end(), g);
-
         int num_open = 0;
         for (auto i : points) {
           if (pc.check()) break;
           pc.open(i);
           ++num_open;
         }
-        
-        est += num_open / static_cast<double>(size * size);
-      }
-      est /= static_cast<double>(iterations);
-      
+        return num_open / static_cast<double>(size * size);
+      };
+
+      vector<std::future<double>> VF;
+      for (int i = 0; i < iterations; ++i)
+        VF.push_back(std::async(comp));
+
+      double est = 0.0;
+      std::for_each(VF.begin(), VF.end(), [&est](std::future<double>& x) {est += x.get(); });
+      est /= iterations;
+
       std::cout << "N = " << size << "\tIterations = " << iterations << std::endl;
       std::cout << "P = " << est << std::endl;
 
