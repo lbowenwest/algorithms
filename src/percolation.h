@@ -15,7 +15,7 @@ class percolation {
     size_t sz;
     size_t len;
     bool* id;
-    UnionFindQUW uf;
+    UnionFind uf;
 
     inline size_t index(size_t r, size_t c) {return sz * r + c; };
     inline size_t index(coord c) {return sz * c.first + c.second; };

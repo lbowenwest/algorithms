@@ -1,44 +1,34 @@
 #include "union_find.h"
 
-void UnionFind::check_inputs(int a, int b) {
-  if (a > size() || b > size()) throw std::invalid_argument("index not in range"); 
-}
+using namespace std;
 
-bool UnionFindQF::find(int a, int b) {
-  check_inputs(a, b);
-  return elem[a] == elem[b];
-}
-
-void UnionFindQF::unite(int a, int b) {
-  check_inputs(a, b);
-  int aval = elem[a];
-  int bval = elem[b];
-  for (int i = 0; i < sz; ++i) {
-    if (elem[i] == aval) elem[i] = bval;
+UnionFind::UnionFind(size_t n)
+  : elem{new size_t[n]}, sz{n}, trees{new size_t[n]} {
+  
+  for (size_t i = 0; i < n; ++i) {
+    elem[i] = i;
+    trees[i] = 1;
   }
 }
 
-
-
-int UnionFindQU::root(int i) {
-  while (i != elem[i]) i = elem[i];
-  return i;
+UnionFind::~UnionFind() {
+  delete [] elem;
+  delete [] trees;
 }
 
-bool UnionFindQU::find(int a, int b) {
-  check_inputs(a, b);
+inline size_t UnionFind::size() {
+  return sz;
+}
+
+bool UnionFind::find(size_t a, size_t b) {
+  if (!valid(a) || !valid(b)) throw invalid_argument("index not in range");
+
   return root(a) == root(b);
 }
 
-void UnionFindQU::unite(int a, int b) {
-  check_inputs(a, b);
-  elem[root(a)] = root(b);
-}
+void UnionFind::unite(size_t a, size_t b) {
+  if (!valid(a) || !valid(b)) throw invalid_argument("index not in range");
 
-
-
-void UnionFindQUW::unite(int a, int b) {
-  check_inputs(a, b);
   int i = root(a), j = root(b);
   if (i == j) return;
 
@@ -51,9 +41,11 @@ void UnionFindQUW::unite(int a, int b) {
   }
 }
 
+inline bool UnionFind::valid(size_t a) {
+  return a < sz;
+}
 
-
-int UnionFindQUWC::root(int i) {
+size_t UnionFind::root(size_t i) {
   while (i != elem[i]) {
     elem[i] = elem[elem[i]];
     i = elem[i];
