@@ -7,7 +7,7 @@ using std::pair;
 using std::cout;
 
 
-percolation::percolation(size_t n) : sz(n), len(n*n+2), id(new bool[n*n]()), uf(UnionFindQUW((n*n)+2)) {
+percolation::percolation(size_t n) : sz(n), len(n*n+2), id(new bool[n*n]()), uf(UnionFind((n*n)+2)) {
   for (auto& i : row(0))      uf.unite(len-2, index(i)); 
   for (auto& i : row(sz - 1)) uf.unite(len-1, index(i));
 }
