@@ -1,0 +1,12 @@
+[submodule "external/argh"]
+	path = external/argh
+	url = gh:adishavit/argh
+[submodule "external/random"]
+	path = external/random
+	url = gh:effolkronium/random
+[submodule "external/dynamic_bitset"]
+	path = external/dynamic_bitset
+	url = gh:pinam45/dynamic_bitset
+[submodule "external/fmt"]
+	path = external/fmt
+	url = gh:fmtlib/fmt
