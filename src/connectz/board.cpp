@@ -66,7 +66,7 @@ namespace cz {
             return false;
         std::array<Direction, 4> directions{Direction{0, 1}, Direction{1, 1}, Direction{1, 0}, Direction{-1, 1}};
         return std::any_of(directions.begin(), directions.end(), [&start, &player, this](Direction dir) {
-            return get_streak(start, dir, player) > dimensions.win_length;
+            return get_streak(start, dir, player) >= dimensions.win_length;
         });
     }
 
@@ -78,7 +78,7 @@ namespace cz {
             column += direction.delta_x;
             row += direction.delta_y;
         }
-        column = start.first - 1, row = start.second - 1;
+        column = start.first - direction.delta_x, row = start.second - direction.delta_y;
         while (valid_position(column, row) && at(column, row) == player) {
             length++;
             column -= direction.delta_x;
